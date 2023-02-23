@@ -1,0 +1,67 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Home Page{% endblock title %}
+
+{% block content %}
+    <!-- slider section -->
+    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
+                aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
+                aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
+                aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            {% for object in carousel%}
+            <div class="carousel-item {% if forloop.counter0 == 0 %}active{% endif %}">
+                <img src="{{object.image.url}}" style="height:650px;" class="testi-overly d-block w-100" alt="sliderImg">
+                <div class="carousel-caption d-none d-md-block">
+                    <h1 class="animate__animated
+                    {% if forloop.counter0 == 0 %}
+                    animate__fadeInDown
+                    {% endif %}
+                    {% if forloop.revcounter == 1 %}
+                    animate__bounce
+                    {% endif %}
+                    {% if forloop.revcounter == 2 %}
+                    animate__fadeInRight
+                    {% endif %}">{{object.title}}</h1>
+                    <h3 class="animate__animated animate__zoomIn">{{object.sub_title}}</h3>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+        <!-- Featured Product Start -->
+        <div class="featured-product product">
+            <div class="container-fluid">
+                <div class="section-header">
+                    <h1 style="text-align:center;">Latest Product</h1>
+                </div> 
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+              {% for product in newest_obj %}
+               {% include 'product/parts/list_item.html' %}
+              {% endfor %}
+            </div>
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+              <li class="page-item">
+                {% if newest_obj.has_previous %}
+                <a class="page-link" tabindex="-1" href="?page={{ newest_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+              </li>
+              <li class="page-item"><a class="page-link" href="#">{{ newest_obj.number }} of {{ newest_obj.paginator.num_pages }}</a></li>
+              <li class="page-item">
+                {% if newest_obj.has_next %}
+                <a class="page-link" href="?page={{ newest_obj.next_page_number }}">Next</a>
+                {% endif %}
+              </li>
+            </ul>
+          </nav>         
+{% endblock content %}
