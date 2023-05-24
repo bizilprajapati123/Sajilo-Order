@@ -1,0 +1,40 @@
+{% extends 'core/base.html' %}
+
+{% block title %}User Reports{% endblock title %}
+
+{% block content %}
+
+<div class="global-container">
+    <div class="container mt-4 mb-4">
+        <div class="row">
+            
+            <div class="col-md-6 mx-auto">
+                <div
+                    class="card bg-white text-secondary align-items-center text-center"
+                    >
+                  
+                    <div class="card-body">
+                        <p class="card-text">
+                        {% if errors %}
+                        <h3>{{ errors }}</h3>
+                        {% endif %}
+                        {% if message %}
+                        <h3>{{ message }}</h3>
+                        {% endif %}
+                        <h4>Report User</h4>
+                        <form method="POST" enctype="multipart/form-data" action="">
+                            {% csrf_token %}
+                            User username or Shop name <input type="text" class="form-control"  name="usernames" required><br>
+                            Proof:<br><input type="file" accept="image/*" class="form-control" name="proof" required><br>
+                            Explanation <br> <textarea type="text" class="form-control" name="reason" required></textarea><br><br> 
+                            <input class="btn btn-dark"type="submit" value="Report user">
+                        </form>
+                        <h7 style="font-size:12px;">
+                            Notes: Shop name or Username of the user must me included
+                        </h7>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

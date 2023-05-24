@@ -1,0 +1,20 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Search for {{query}}{% endblock title %}
+
+{% block content %}
+<div class="featured-product product">
+    <div class="container-fluid">
+        <div class="section-header">
+            <h2 class="is-size-3"> Search for ({{query}})</h2>
+        </div> 
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+          {% for product in products %}
+          {% include 'product/parts/list_item.html' %}
+          {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

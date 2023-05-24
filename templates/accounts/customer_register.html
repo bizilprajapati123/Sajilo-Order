@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>- Customer Registration</title>
+
+           <!-- Google Fonts -->
+           <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Source+Code+Pro:700,900&display=swap" rel="stylesheet">
+           <!-- CSS Libraries -->
+           <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+              <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+              <link rel="stylesheet" href="{% static 'css/mainss.css' %}">
+
+</head>
+<a href="{% url 'core:home' %}" class="nav-link btn-outline-primary ">Home</a>
+{% for message in messages %}
+<div class="d-flex justify-content-center alert alert-{{ message.tags }} mt-2"
+ role="alert">{{ message }}</div>
+ {% endfor %}
+{% if error %}<h1 class="h4 text-gray-900 mb-4 alert alert-danger">{{ error }}</h1>{% endif %}
+<body class="bg-gradient-primary">
+<div class="container">
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+        <div class="col-xl-10 col-lg-12 col-md-9">
+
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <div class="col-xl-6 d-none d-xl-block">
+                            <img src="{% static 'img/Registration.jpg' %}"
+                              alt="Sample photo" class="img-fluid"
+                              style="height: 160vh" />
+                          </div>
+                        <div class="col-lg-6">
+                            <div class="p-5">
+                                <div class="text-center">
+                                    <h1 class="h4 text-gray-900 mb-4 fa fa-user">Register as Customer</h1>
+                                    <h1 class="h4 text-gray-900 mb-4">Welcome!</h1>
+                                   
+                                </div>
+                                <form action="{% url 'accounts:customer_register' %}" method="post">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        Email<br><input type="email"class="form-control" name="email" value="{{ email }}" required><br>
+                                        Username<br><input type="text" class="form-control" name="username" value="{{ username }}" required><br>
+                                        Date Of Birth<br><input type="date" class="form-control" name="date_of_birth" value="{{ date_of_birth }}  required"><br>
+                                        First name<br><input type="text" class="form-control" name="first_name" required><br>
+                                        Last name<br><input type="text" class="form-control" name="last_name" required><br>
+                                        Phone Number:<br><input type="number"  class="form-control" minlength="10" min="9800000000" max="9999999999" name="phone_number"><br>
+                                        Password<br><input type="password"  class="form-control" name="password" minlength="7"  required><br>
+                                        Password Confirmation<br><input type="password" class="form-control" name="password2"  required><br><br>
+                                        <input type="submit" value="Register" class="btn btn-primary">
+                                    </div>
+                                </form>
+                                <hr>
+                                <div class="text-center">
+                                    <a class="btn-secondary" href="{% url 'accounts:seller_register' %}">Register As Seller</a>
+                                </div>
+                                <div class="text-center">
+                                    <a class="btn-success" href="{% url 'accounts:login' %}">Already have an
+                                        Account!</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+</body>
+
+</html>
+

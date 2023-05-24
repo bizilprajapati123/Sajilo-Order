@@ -1,0 +1,178 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Cart{% endblock title %}
+
+{% block content %}
+
+ <!-- Cart Start -->
+ {% if cart %}
+ <div class="cart-page">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="cart-page-inner">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Product Image</th>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="align-middle">
+                                {% for item in cart %}
+                                <tr>
+                                    <td>
+                                        <div class="image is-64x64">
+                                            <img src="{{ item.product.get_thumbnail }}" alt="{{item.product.title}}" width="100">
+
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a class="btn-info" href="{% url 'product:product' item.product.category.slug item.product.slug %}">{{item.product.title}}</a>
+                                    </td>
+                                    <td>
+                                        <div class="qty">
+                                            <a href="?change_quantity={{ item.id }}&quantity=-1"> <button class="btn-minus"><i class="fa fa-minus"></i></button></a>
+                                            <input type="text" value="{{item.quantity}}">
+                                            <a href="?change_quantity={{ item.id }}&quantity=1"><button class="btn-plus"><i class="fa fa-plus"></i></button></a>
+                                        </div>
+                                    </td>
+                                    <td>Rs.{{ item.total_price }}</td>
+                                    <td><a href="?remove_from_cart={{item.id}}" class=" btn-danger">Remove</a></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table><br>
+                        <a href="{% url 'core:home' %}" class="btn">Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="cart-page-inner">
+                    <div class="row">
+                        <div class="col-md-12">
+                        </div>
+                        <div class="col-md-12">
+                            <div class="cart-summary">
+                                <div class="cart-content">
+                                    <h1>Cart Summary</h1>
+                                    <p>Total items<span>{{ cart|length }}</span></p>
+                                    <h2>Grand Total<span>Rs.{{cart.get_total_cost}}</span></h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Cart End -->
+ <!-- Checkout Start -->
+ <form method="post" action="" id="payment-form">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="notification is-danger">
+            {{form.non_field_errors}}
+        </div>
+    {% endif %}
+
+    {% if form.errors %}
+        <div class="notification is-danger">
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li><strong>{{field.label}}</strong>{{error}}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+ <div class="checkout">
+    <div class="container-fluid"> 
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="checkout-inner">
+                    <div class="billing-address">
+                        <h2>Shipping Address</h2>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>First Name</label>
+                                <input class="form-control" type="text" placeholder="First Name" name="first_name" id="">
+                            </div>
+                            <div class="col-md-6">
+                                <label>Last Name</label>
+                                <input class="form-control" type="text" placeholder="Last Name" name="last_name" id="">
+                            </div>
+                            <div class="col-md-6">
+                                <label>E-mail</label>
+                                <input class="form-control" type="text" placeholder="E-mail" name="email" id=""> 
+                            </div>
+                            <div class="col-md-6">
+                                <label>Phone Number</label>
+                                <input class="form-control" type="text" placeholder="Phone Number" name="phone" id="">
+                            </div>
+                            <div class="col-md-12">
+                                <label>Address</label>
+                                <input class="form-control" type="text" placeholder="Address" name="address" id="">
+                            </div>
+  
+                            <div class="col-md-6">
+                                <label>Zip Code</label>
+                                <input class="form-control" type="text" placeholder="Zipcode" name="zipcode" id="">
+                            </div>
+                            <div class="col-md-6">
+                                <label>Place</label>
+                                <input class="form-control" type="text" placeholder="Place" name="place" id="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="checkout-inner">
+                    <div class="checkout-payment">
+                        <div class="payment-methods">
+                            <h1>Payment Methods</h1>
+                       
+                            <div class="row group">
+                                <div class="col-sm-8">
+                                    <div class="group-select justify" tabindex='1'>
+                                        {{ form.payment }}
+                                        <div class="arrow bold"><i class="ion-chevron-down"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="checkout-btn">
+                            <button>Place Order</button>
+                            <h7 style="font-size:12px;">
+                                Notes:Clicking the Place order will place your order.If your online payment is failed we will cancel your order.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+<!-- Checkout End -->
+{% else %}
+<br>
+<h3 style="text-align:center;">You don't have any products in your Trolley.</h3><a style="text-align:center;" href="{% url 'core:home' %}" class="btn" >Add Now</a><br>
+
+
+
+{% endif %}
+{% endblock content %}
+
+
+{% block scripts %}
+
+{% endblock scripts %}

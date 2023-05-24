@@ -1,0 +1,8 @@
+
+<form method="post">
+    {% csrf_token %}
+    
+    Are you sure you want to Delete the product? <br>
+    <input type = "submit" value="YES">
+    <a href="{% url 'vendor:vendor-admin' %}">Cancel</a>
+</form>

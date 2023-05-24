@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+{% block title %}{{vendor.shop_name}}{% endblock title %}
+{% block content %}
+<div class="featured-product product">
+    <div class="container-fluid">
+        <div class="section-header">
+            <h2 class="is-size-3" style="text-align:center;">Products of-{{vendor.shop_name}}</h2>
+        </div>
+    </div>
+</div>
+        <div class="container-fluid">
+            <div class="row">
+            {% for product in vendor.products.all %}
+            {% include 'product/parts/list_item.html' %}
+            {% endfor %}
+            </div>
+        </div>
+{% endblock content %}

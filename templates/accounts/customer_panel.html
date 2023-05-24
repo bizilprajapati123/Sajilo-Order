@@ -1,0 +1,156 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Customer Profile{% endblock title %}
+
+{% block content %}
+<style>
+    .box{
+        height:250px;
+        width: 560px;
+        background-color:	#00000;
+        box-shadow: 5px 5px 50px rgba(0, 0, 0, 0.2);
+        border-radius: 20px;
+        margin: 10px auto; 
+        float: none; 
+        margin-bottom: 5px;
+        text-align:center;
+    }
+</style>
+
+<div class="featured-product product">
+    <div class="container-fluid">
+        <div class="section-header">
+            <h1 style="text-align:center;"> Welcome to Customer Panel- {{user.username}}</h1>
+            
+        </div> 
+    </div>
+</div>
+ <!-- My Account Start -->
+ <div class="my-account">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="nav flex-column nav-pills" id="myTab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link active" id="accountdetails-nav" data-toggle="pill" href="#accountdetails-tab"><i class="fa fa-id-card"></i>Account Details</a>
+                    <a class="nav-link" id="order-nav" data-toggle="pill" href="#order-tab" role="tab"><i class="fa fa-shopping-basket "></i>My Order</a>
+                    <a class="nav-link" id="account-nav" data-toggle="pill" href="#account-tab" role="tab"><i class="fa fa-user"></i>Update Account</a>
+                    <a class="nav-link" href="{% url 'accounts:logout' %}"><i class="fa fa-sign-out "></i>Logout</a>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="accountdetails-tab" role="tabpanel" aria-labelledby="accountdetails-nav">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                Personal Information
+                            </div>
+                            <div class="card-body">
+                        <strong>Username: </strong> {{user.username}} <br>
+                        <strong>Email: </strong> {{user.email}} <br>
+                        <strong>First Name: </strong> {{user.first_name}} <br>
+                        <strong>Last Name: </strong> {{user.last_name}} <br>
+                        <strong>Phone Number: </strong> {{user.phone_number}} <br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="order-tab" role="tabpanel" aria-labelledby="order-nav">
+                        <div class="table-responsive">
+                            <h2>My Orders</h2>
+                            
+                            <table width="100%" cellspacing="0" cellpadding="0">
+                                <table class="table table-bordered">
+                                    <thead class="thead-dark" >
+                                <tr>
+                                    <td><b>OrderID</b></td>
+                                    <td><b>Email</b></td>
+                                    <td><b>Product Name</b></td>
+                                    <td><b>Payment Completed</b></td>
+                                    <td><b>Payment Method</b></td>
+                                    <td><b>Total</b></td>
+                                    <td><b> Cancel Order</b></td>
+                                </tr>
+                            </thead>
+                                {% for order in customerord_obj %}
+            
+                                        <tr>
+                                            <td>#{{ order.id }}</td>
+                                            <td>{{ order.order.email}}</td>
+                                            <td>{{ order.product.title }}</td>
+                                            <td>{{ order.order.payment_completed|yesno:"Yes,No"}}</td>
+                                            <td>{{ order.order.payment }}</td>
+                                            <td>Rs.{{ order.order.amount }}</td>
+                                            <td><a class="btn-danger" href="{% url 'accounts:cancelorder' order.id %}">Cancel order</a></td> 
+                                        </tr>
+                                       
+                                {% endfor %}
+                              
+                            </table><br>
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center">
+                                  <li class="page-item">
+                                    {% if customerord_obj.has_previous %}
+                                    <a class="page-link" tabindex="-1" href="?page={{ customerord_obj.previous_page_number }}">Previous</a>
+                                    {% endif %}
+                                  </li>
+                                  <li class="page-item"><a class="page-link" href="#">{{ customerord_obj.number }} of {{ customerord_obj.paginator.num_pages }}</a></li>
+                                  <li class="page-item">
+                                    {% if customerord_obj.has_next %}
+                                    <a class="page-link" href="?page={{ customerord_obj.next_page_number }}">Next</a>
+                                    {% endif %}
+                                  </li>
+                                </ul>
+                              </nav> 
+
+                    
+                        </div>
+                    </div>
+                        <div class="tab-pane fade" id="account-tab" role="tabpanel" aria-labelledby="account-nav">
+                        <form method="POST" action="{% url 'accounts:edit-customer' %}">
+                            {% csrf_token %}
+                            <h4>Update Account</h4>
+                            <div class="field">
+                                <label>First name</label>
+                                <div class="control">
+                                    <input type="text" name="first_name" id="id_first_name" value="{{ user.first_name }}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>Last name</label>
+                                <div class="control">
+                                    <input type="text" name="last_name" id="id_last_name" value="{{ user.last_name }}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>Phone Number</label>
+                                <div class="control">
+                                    <input type="number" name="phone_number" id="id_phone_number" minlength="10" min="9800000000" max="9999999999" name="phone_number" value="{{ user.phone_number }}" class="form-control">
+                                </div>
+                            </div>
+                               
+                            <div class="field">
+                            <div class="control">
+                                <button class="button is-dark is-uppercase">Update Account</button>
+                             </div>
+                           </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- My Account End -->
+{% block scripts %}
+<script>
+    $(document).ready(function(){
+        $('a[data-toggle="pill"]').on('show.bs.tab', function(e) {
+            localStorage.setItem('activeTab', $(e.target).attr('href'));
+        });
+        var activeTab = localStorage.getItem('activeTab');
+        if(activeTab){
+            $('#myTab a[href="' + activeTab + '"]').tab('show');
+        }
+    });
+    </script>
+{% endblock scripts %}
+{% endblock content %}

@@ -1,0 +1,31 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Add Product{% endblock title %}
+
+{% block content %}
+<section class="section">
+    {% comment %} <div class="container"> {% endcomment %}
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card m-4">
+
+                 <h1 class="title">Add Product</h1>
+
+                 <form method="post" action="" enctype="multipart/form-data">
+                 {% csrf_token %}
+
+                 {{ form.as_p }}
+                 {{ form.media }}
+
+                  <div class="field">
+                    <div class="control">
+                       <button class="button is-dark is-uppercase">Add Product</button>
+                     </div>
+                  </div>
+                </form>
+                 </div>
+            </div>
+        {% comment %} </div> {% endcomment %}
+    </div>
+    </section>
+{% endblock content %}

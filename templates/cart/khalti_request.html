@@ -1,0 +1,102 @@
+{% load static %}
+<html>
+<head>
+    <script src="https://unpkg.com/khalti-checkout-web@latest/dist/khalti-checkout.iffe.js"></script>
+    <script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</head>
+<body>
+    <style>
+        .box{
+            height:300px;
+            width: 560px;
+            background-color:	#00000;
+            box-shadow: 5px 5px 50px rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            margin: 155px auto; 
+            float: none; 
+            margin-bottom: 5px;
+            text-align:center;
+        }
+        .btn {
+            color: #FF6F61;
+            background: #ffffff;
+            border: 1px solid #FF6F61;
+        }
+        .btn:hover,
+        .btn:active,
+        .btn:focus {
+            color: #ffffff;
+            background: #FF6F61;
+            box-shadow: none;
+        }
+    </style>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="box"><br>
+                <img
+                src="{% static 'img/Khalti.png' %}"
+                alt="Payment Method"/ width="120" height="120"><br>
+                <h3>Your Total Amount is: Rs{{order.amount}}</h3>
+    <!-- Place this where you need payment button -->
+    <button class="btn" id="payment-button"><h4>Pay<h4></button>
+    <!-- Place this where you need payment button -->
+    <!-- Paste this code anywhere in you body tag -->
+            </div>
+        </div>
+    </div>
+    <script>
+        var config = {
+            // replace the publicKey with yours
+            "publicKey": "test_public_key_dc1ade95ae394258a07063eee69cce19",
+            "productIdentity": "order_{{order.id}}",
+            "productName": "order_{{order.id}}",
+            "productUrl": "http://localhost:8000",
+            "paymentPreference": [
+                "KHALTI",
+                "EBANKING",
+                "MOBILE_BANKING",
+                "CONNECT_IPS",
+                "SCT",
+                ],
+            "eventHandler": {
+                onSuccess(payload) {
+                    // hit merchant api for initiating verfication
+                    axios.get("/cart/khalti-verify/", {
+                        params: {
+                            "token": payload.token,
+                            "amount": payload.amount,
+                            "order_id": "{{order.id}}"
+                        }
+                    }).then(function(resp){
+                        if (resp.data.success == true){
+                            alert("Thanks. Payment Completed Successfully")
+                            location.href = "/cart/ordersuccess/"
+                        }else{
+                            alert("Sorry. Error occurred")
+                            location.href = "{{request.build_absolute_uri}}"
+                        }
+                    })
+                },
+                onError (error) {
+                    console.log(error);
+                },
+                onClose () {
+                    console.log('widget is closing');
+                }
+            }
+        };
+
+        var checkout = new KhaltiCheckout(config);
+        var btn = document.getElementById("payment-button");
+        btn.onclick = function () {
+            // minimum transaction amount must be 10, i.e 1000 in paisa.
+            checkout.show({amount: {{order.amount}} *100});
+        }
+    </script>
+    <!-- Paste this code anywhere in you body tag -->
+    ...
+</body>
+</html>

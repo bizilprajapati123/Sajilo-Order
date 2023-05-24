@@ -1,0 +1,41 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Product Request{% endblock title %}
+
+{% block content %}
+
+<div class="global-container">
+    <div class="container mt-4 mb-4">
+        <div class="row">
+            
+            <div class="col-md-6 mx-auto">
+                <div
+                    class="card bg-white text-secondary align-items-center text-center"
+                    >
+                  
+                    <div class="card-body">
+                        <p class="card-text">
+                        {% if errors %}
+                        <h3>{{ errors }}</h3>
+                        {% endif %}
+                        {% if message %}
+                        <h3>{{ message }}</h3>
+                        {% endif %}
+                        <h4>Product Name</h4>
+                        <h5 class="btn-secondary">{{product.title}}</h5>
+                        <form method="POST" action="">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{product.vendor}}" name="vendoremail">
+                            <input type="hidden" value="{{product.title}}" name="productname"><br>
+                            Message <br> <textarea type="text" name="message"></textarea><br><br> 
+                            <input class="btn btn-dark"type="submit" value="Send Product Request">
+                        </form>
+                        <h7 style="font-size:12px;">
+                            Notes:In the Message field write your message if you want to request what are things you wanted in the product you are requesting.
+                        </h7>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

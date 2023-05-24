@@ -1,0 +1,266 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Vendor Admin{% endblock title %}
+
+{% block content %}
+<style>
+    .box{
+        height:300px;
+        width: 560px;
+        background-color:	#00000;
+        box-shadow: 5px 5px 50px rgba(0, 0, 0, 0.2);
+        border-radius: 20px;
+        margin: 10px auto; 
+        float: none; 
+        margin-bottom: 5px;
+        text-align:center;
+    }
+</style>
+ <!-- My Account Start -->
+ <div class="my-account">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="nav flex-column nav-pills"  id="myTab" role="tablist" aria-orientation="vertical">
+                    <h2>Vendor Dashboard</h2> 
+                    <h3 style="font-size:30px; text-align:center;">Welcome {{vendor.shop_name}}</h3>
+                    <a class="nav-link active" id="accountdetails-nav" data-toggle="pill" href="#accountdetails-tab" role="tab"><i class="fa fa-id-card"></i>Account Details</a>
+                    <a class="nav-link" id="products-nav" data-toggle="pill" href="#orders-tab" role="tab"><i class="fa fa-shopping-bag"></i>Products</a>
+                    <a class="nav-link" id="reports-nav" data-toggle="pill" href="#reports-tab" role="tab"><i class="fa fa-rocket"></i>Reports</a>
+                    <a class="nav-link" id="order-nav" data-toggle="pill" href="#order-tab" role="tab"><i class="fa fa-shopping-basket "></i>My Order</a>
+                    <a class="nav-link" id="account-nav" data-toggle="pill" href="#account-tab" role="tab"><i class="fa fa-user"></i>Update Account</a>
+                    <a class="nav-link" href="{% url 'accounts:logout' %}"><i class="fa fa-sign-out "></i>Logout</a>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="accountdetails-tab" role="tabpanel" aria-labelledby="accountdetails-nav">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                Personal Information
+                            </div>
+                            <div class="card-body">
+                                    <strong>Username: </strong>{{vendor.username}} <br>
+                                    <strong>Email: </strong> {{vendor.email}} <br>
+                                    <strong>Shop Name: </strong> {{vendor.shop_name}} <br>
+                                    <strong>First Name: </strong> {{vendor.first_name}} <br>
+                                    <strong>Last Name: </strong> {{vendor.last_name}} <br>
+                                    <strong>Phone Number: </strong> {{vendor.phone_number}} <br> 
+                                    <strong>Vat/Pan Number: </strong> {{vendor.VatPan_number}} <br> 
+                                    <strong>Address: </strong> {{vendor.address}} <br>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="orders-tab" role="tabpanel" aria-labelledby="orders-nav">
+                        <div class="table-responsive">
+                            <h4>My Products</h4>
+                            <a href="{% url 'vendor:add-product' %}" class="btn">Add Product</a><br>
+                            {% if products %}<br>
+                            <table class="table table-bordered">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>S.N.</th>
+                                        <th>Title</th>
+                                        <th>Price</th>
+                                        <th>Availability</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for product in products_obj %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td><a href="{% url 'product:product' product.category.slug product.slug %}">{{ product.title }}</a></td>
+                                        <td>Rs.{{ product.price }}</td>
+                                        <td>{{product.Availability}}</td>
+                                        <td><a  class="btn-success" href="{% url 'vendor:Update_product' product.id %}">Update</a>
+                                            <a class="btn-danger"  href="{% url 'vendor:deleteproduct' product.id %}">Delete</a></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {% else %}
+                            <p class="has-text-danger">Products not added yet.</p>
+                        {% endif %}
+                        </div><br>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-center">
+                              <li class="page-item">
+                                {% if products_obj.has_previous %}
+                                <a class="page-link" tabindex="-1" href="?page={{ products_obj.previous_page_number }}">Previous</a>
+                                {% endif %}
+                              </li>
+                              <li class="page-item"><a class="page-link" href="#">{{ products_obj.number }} of {{ products_obj.paginator.num_pages }}</a></li>
+                              <li class="page-item">
+                                {% if products_obj.has_next %}
+                                <a class="page-link" href="?page={{ products_obj.next_page_number }}">Next</a>
+                                {% endif %}
+                              </li>
+                            </ul>
+                          </nav> 
+                    </div>
+                    <div class="tab-pane fade" id="reports-tab" role="tabpanel" aria-labelledby="reports-nav">
+                            <div class="col-md-12 mt-8">
+                                <div class="card">
+                                    <div class="card-header bg-info text-white">
+                                        My Reports
+                                    </div><br>
+                                    <strong style="text-align:center;">My Paid Amount: Rs.{{vendor.get_paid_amount}}</strong> <br><br>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <a class="text-decoration-none text-dark"> 
+                                                    <div class="card my-card shadow">
+                                                        <div class="card-body text-center">
+                                                            <h4>Total Products <i class="fa fa-shopping-bag "></i></h4>
+                                                            <h3>{{ product_count }}</h3>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <a class="text-decoration-none text-dark">
+                                                    <div class="card my-card shadow">
+                                                        <div class="card-body text-center">
+                                                            <h4>Total Orders <i class="fa fa-shopping-basket "></i></h4>
+                                                            <h3>{{ order_count }}</h3>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <a class="text-decoration-none text-dark">
+                                                    <div class="card my-card shadow">
+                                                        <div class="card-body text-center">
+                                                            <h4>Total Sales <i class="fa fa-money "></i></h4>
+                                                            <h3>Rs.{{vendor.get_balance}}</h3>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="tab-pane fade" id="order-tab" role="tabpanel" aria-labelledby="order-nav">
+                        <div class="table-responsive">
+                            <h2>My Orders</h2>
+                            <a class="btn" href="{% url 'vendor:notify'%}">Notify Customer</a>
+                            {% if orders %}
+                                {% for order in orders_obj %}
+                                    <div class="{% if order.fully_paid %}has-background-success-light{% else %}has-background-info-light{% endif %} mb-2 p-4">
+                                                <h3 class="is-size-4">#{{ order.id }} - {{ order.first_name }} {{ order.last_name }}</h3>
+                                                <h3>Name:</h3> {{ order.first_name }} {{ order.last_name }}<br>
+                                                <h3>Address:</h3> {{ order.address }}<br>
+                                                <h3>Zip and place:</h3> {{ order.zipcode }} {{ order.place }}<br>
+                                                <h3>E-mail:</h3> {{ order.email }}<br>
+                                                <h3>Phone:</h3> {{ order.phone }}<br>
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-dark" >
+                                                        <tr>
+                                                            <th>Title</th>
+                                                            <th>Price</th>
+                                                            <th>Quantity</th>
+                                                            <th>My Payment</th>
+                                                            <th>Customer Payment</th>
+                                                            <th>Customer Payment Method</th>
+                                                            <th>Total</th>
+                                                            <th>Manage Order</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for item in order.items.all %}
+                                                            {% if item.vendor == request.user %}
+                                                                <tr>
+                                                                    <td>{{ item.product.title }}</td>
+                                                                    <td>Rs.{{ item.product.price }}</td>
+                                                                    <td>{{ item.quantity }}</td>
+                                                                    <td>{{ item.vendor_paid|yesno:"Yes,No" }}</td>
+                                                                    <td>{{item.order.payment_completed|yesno:"Yes,No"}}</td>
+                                                                    <td>{{item.order.payment}}</td>
+                                                                    <td>Rs.{{ item.get_total_price }}</td>
+                                                                    <td><a class="btn-danger" href="{% url 'vendor:deleteorder' order.id %}">Delete order</a>   
+                                                                    </td>
+                                                                </tr>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </tbody>
+                                                 </table>
+                                     </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-center">
+                              <li class="page-item">
+                                {% if orders_obj.has_previous %}
+                                <a class="page-link" tabindex="-1" href="?page={{ orders_obj.previous_page_number }}">Previous</a>
+                                {% endif %}
+                              </li>
+                              <li class="page-item"><a class="page-link" href="#">{{ orders_obj.number }} of {{ orders_obj.paginator.num_pages }}</a></li>
+                              <li class="page-item">
+                                {% if orders_obj.has_next %}
+                                <a class="page-link" href="?page={{ orders_obj.next_page_number }}">Next</a>
+                                {% endif %}
+                              </li>
+                            </ul>
+                          </nav> 
+                    </div>
+                    
+                    <div class="tab-pane fade" id="account-tab" role="tabpanel" aria-labelledby="account-nav">
+                    <form method="POST" action="{% url 'vendor:edit-vendor' %}">
+                        {% csrf_token %}
+                        <h4>Update Account</h4>
+                        <div class="field">
+                            <label>Shop name</label>
+                            <div class="control">
+                                <input type="text" name="shop_name" id="id_shop_name" value="{{ vendor.shop_name }}" class="form-control">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>First name</label>
+                            <div class="control">
+                                <input type="text" name="first_name" id="id_first_name" value="{{ vendor.first_name }}" class="form-control">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Last name</label>
+                            <div class="control">
+                                <input type="text" name="last_name" id="id_last_name" value="{{ vendor.last_name }}" class="form-control">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Phone Number</label>
+                            <div class="control">
+                                <input type="number" name="phone_number" id="id_phone_number" minlength="10" min="9800000000" max="9999999999" name="phone_number" value="{{ vendor.phone_number }}" class="form-control">
+                            </div>
+                        </div>
+                        <div class="field">
+                        <div class="control">
+                            <button class="button is-dark is-uppercase">Update Account</button>
+                         </div>
+                       </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- My Account End -->
+{% block scripts %}
+<script>
+    $(document).ready(function(){
+        $('a[data-toggle="pill"]').on('show.bs.tab', function(e) {
+            localStorage.setItem('activeTab', $(e.target).attr('href'));
+        });
+        var activeTab = localStorage.getItem('activeTab');
+        if(activeTab){
+            $('#myTab a[href="' + activeTab + '"]').tab('show');
+        }
+    });
+    </script>
+{% endblock scripts %}
+{% endblock content %}

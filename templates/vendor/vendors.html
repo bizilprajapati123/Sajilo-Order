@@ -1,0 +1,46 @@
+{% extends 'core/base.html' %}
+{% block title %}Vendors{% endblock title %}
+{% block content %}
+<style>
+    .box{
+        width: 760px;
+        background-color:#f0f5f5;
+        box-shadow: 5px 5px 50px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        margin: 10px auto;
+        text-align:center
+    }
+</style>
+<div class="featured-product product">
+    <div class="container-fluid">
+        <div class="section-header">
+    <h1 class="title" style="text-align:center;">All Vendors</h1>
+        </div>
+    </div>
+</div>
+    {% for vendor in vendors_obj %}
+    <div class="container-fluid">
+        <div class="row">
+                    <div class="box">
+                        <h4>Vendor: {{ vendor.shop_name }}<h4>
+                        <a href="{% url 'vendor:vendor' vendor.id %}" class="btn" >View Products</a>
+                    </div>
+        </div>
+    </div>
+    {% endfor %}  
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item">
+            {% if vendors_obj.has_previous %}
+            <a class="page-link" tabindex="-1" href="?page={{ vendors_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+          </li>
+          <li class="page-item"><a class="page-link" href="#">{{ vendors_obj.number }} of {{ vendors_obj.paginator.num_pages }}</a></li>
+          <li class="page-item">
+            {% if vendors_obj.has_next %}
+            <a class="page-link" href="?page={{ vendors_obj.next_page_number }}">Next</a>
+            {% endif %}
+          </li>
+        </ul>
+      </nav>     
+{% endblock content %}

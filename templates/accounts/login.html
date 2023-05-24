@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Login</title>
+
+     <!-- Google Fonts -->
+     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Source+Code+Pro:700,900&display=swap" rel="stylesheet">
+     <!-- CSS Libraries -->
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+   <!-- animate css link -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+     <link rel="stylesheet" href="{% static 'css/mainss.css' %}">
+
+</head>
+<a href="{% url 'core:home' %}" class="nav-link btn-outline-primary ">Home</a>
+{% if errors %}
+<h1 class="h4 text-gray-900 mb-4 alert alert-danger">{{ errors }}</h1>
+{% endif %}
+<body class="bg-gradient-primary">
+
+<div class="container">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+
+        <div class="col-xl-10 col-lg-12 col-md-9">
+
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <div class="col-xl-6 d-none d-xl-block">
+                            <img src="{% static 'img/login.png' %}"
+                              alt="Sample photo" class="img-fluid"
+                              style="height: 80vh" />
+                          </div>
+                        <div class="col-lg-6">
+                            <div class="p-5">
+                                <div class="text-center">
+                                    <h1 class="h4 text-gray-900 mb-4 fa fa-user">Login Panel</h1>
+                                    <h1 class="h4 text-gray-900 mb-4">Welcome !</h1>
+
+                                </div>
+                                <form class="user" action="{% url 'accounts:login' %}" method="post">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        Email<input type="email" class="form-control form-control-user"
+                                               id="exampleInputEmail" aria-describedby="emailHelp"
+                                               placeholder="Enter Email Address..." name="email" required>
+                                    </div>
+                                    <div class="form-group">
+                                       Password <input type="password" class="form-control form-control-user"
+                                               id="exampleInputPassword" placeholder="Password" name="password" required>
+                                    </div>
+                                    <input type="submit"  class="btn btn-primary btn-user btn-block" value="Login">
+
+                                </form>
+
+                                <hr>
+                                <div class="text-center">
+                                    <a class="btn-danger" href="{% url 'reset_password' %}">Forgot Password?</a>
+                                </div>
+                                <div class="text-center">
+                                    <a class="btn-success" href="{% url 'accounts:customer_register' %}">Create an Account!</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

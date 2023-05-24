@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{category.title}}{% endblock title %}
+
+{% block content %}
+<div class="featured-product product">
+    <div class="container-fluid">
+        <div class="section-header">
+            <h2 class="is-size-3" style="text-align:center;">{{category.title}} </h2>
+        </div> 
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+             {% for product in category_obj %}
+             {% include 'product/parts/list_item.html' %}
+             {% endfor %}
+        </div>
+    </div>
+ <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      <li class="page-item">
+        {% if category_obj.has_previous %}
+        <a class="page-link" tabindex="-1" href="?page={{ category_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+      </li>
+      <li class="page-item"><a class="page-link" href="#">{{ category_obj.number }} of {{ category_obj.paginator.num_pages }}</a></li>
+      <li class="page-item">
+        {% if category_obj.has_next %}
+        <a class="page-link" href="?page={{ category_obj.next_page_number }}">Next</a>
+        {% endif %}
+      </li>
+    </ul>
+  </nav>
+</div>
+{% endblock content %}
